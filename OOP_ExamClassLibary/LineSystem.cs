@@ -12,11 +12,12 @@ namespace OOP_ExamClassLibary
     {
         private readonly List<Product> _allProducts = new List<Product>();
         private readonly List<User> _users = new List<User>();
+        private List<Transaction> _transactions = new List<Transaction>();
 
         public LineSystem()
         {
-            _loadProductsFromFile(ref _allProducts);
-            _loadUsersFromFile(ref _users);
+            LoadProductsFromFile(ref _allProducts);
+            LoadUsersFromFile(ref _users);
         }
 
         public IEnumerable<Product> ActiveProducts
@@ -26,12 +27,33 @@ namespace OOP_ExamClassLibary
 
         public InsertCashTransaction AddCreditsToAccount(User user, int amount)
         {
-            throw new NotImplementedException();
+            return ExecuteTransaction(new InsertCashTransaction(user, amount));
         }
 
         public BuyTransaction BuyProduct(User user, Product product)
         {
-            throw new NotImplementedException();
+            return ExecuteTransaction(new BuyTransaction(user, product));
+        }
+
+        private T ExecuteTransaction<T>(T transaction) where T : Transaction
+        {
+            try
+            {
+                transaction.Execute();
+                _transactions.Add(transaction);
+                LogTransaction(transaction, "Completed");
+                return transaction;
+            }
+            catch (DeactivatedProductExcetion ex)
+            {
+                LogTransaction(transaction, $"Failed: {ex.Message}");
+                throw;
+            }
+            catch (InsufficientCreditsException ex)
+            {
+                LogTransaction(transaction, $"Failed: {ex.Message}");
+                throw;
+            }
         }
 
         public Product GetProductByID(int id)
@@ -41,12 +63,13 @@ namespace OOP_ExamClassLibary
 
         public IEnumerable<Transaction> GetTransactions(User user, int count)
         {
-            throw new NotImplementedException();
+            return _transactions.Where(t => t.User.Equals(user)).OrderByDescending(t => t.Date).Take(count);
         }
 
-        public User GetUsers(Func<User, bool> predicate)
+        public IEnumerable<User> GetUsers(Func<User, bool> predicate)
         {
-            throw new NotImplementedException();
+
+            return _users.Where(predicate);
         }
 
         public User GetUserByUsername(string username)
@@ -54,43 +77,43 @@ namespace OOP_ExamClassLibary
             return _users.Find(p => p.Username == username);
         }
 
-        public event User.UserBalanceNotification UserBalanceWarning;
+        public event User.UserBalanceNotification UserBalanceWarning;  // IKKE LAVET !!
 
-        private void _loadProductsFromFile(ref List<Product> productsOut)
+        private void LoadProductsFromFile(ref List<Product> productsOut)
         {
-            List<string[]> products = _getAllItemsFromFile("products.csv");
+            List<string[]> products = GetAllItemsFromFile("products.csv");
             foreach (string[] product in products)
             {
                 productsOut.Add(new Product(product));
             }
         }
-        private void _loadUsersFromFile(ref List<User> usersOut)
+        private void LoadUsersFromFile(ref List<User> usersOut)
         {
-            List<string[]> users = _getAllItemsFromFile("users.csv");
+            List<string[]> users = GetAllItemsFromFile("users.csv");
             foreach (string[] user in users)
             {
                 usersOut.Add(new User(user));
             }
         }
 
-        private static List<string[]> _getAllItemsFromFile(string filepath)
+        private static List<string[]> GetAllItemsFromFile(string filepath)
         {
             List<string[]> items = new List<string[]>();
             var lines = File.ReadAllLines(filepath);
             foreach (var line in lines.Skip(1).ToList())
             {
-                items.Add(_stripHTML(line.Replace('"', ' ')).Split(';'));
+                items.Add(StripHTML(line.Replace('"', ' ')).Split(';'));
             }
 
             return items;
         }
 
-        private static string _stripHTML(string input)
+        private static string StripHTML(string input)
         {
             return Regex.Replace(input, "<.*?>", String.Empty);
         }
 
-        private static void LogTransaction(Transaction transaction)
+        private static void LogTransaction(Transaction transaction, string status)
         {
             using (StreamWriter sWriter = File.AppendText("Transactions.log"))
             {
