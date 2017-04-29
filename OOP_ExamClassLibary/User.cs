@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
-    class User : IComparable<User>, IComparable
+    public class User : IComparable<User>, IComparable
     {
         private static int _nextUserId = 1;
 
@@ -15,6 +15,9 @@ namespace OOP_Eksamensopgave_2017
         private string _lastname;
         private string _username;
         private string _email;
+
+        public User(string[] fileData) : this(fileData[1].Trim(), fileData[2].Trim(), fileData[3].Trim(), fileData[4].Trim())
+        { }
 
         public User(string firstname, string lastname, string username, string email)
         {

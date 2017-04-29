@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
-    class BuyTransaction : Transaction
+    public class BuyTransaction : Transaction
     {
         public BuyTransaction(User user, Product product) : base(user, product.Price)
         {

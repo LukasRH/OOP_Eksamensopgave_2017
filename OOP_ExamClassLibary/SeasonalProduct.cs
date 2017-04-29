@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
     class SeasonalProduct : Product
     {

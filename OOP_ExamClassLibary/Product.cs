@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
-    class Product : IComparable<Product>, IComparable
+    public class Product : IComparable<Product>, IComparable
     {
         private static int _nextProductId = 1;
 
         private string _name;
+
+        public Product(string[] fileData) : this(fileData[1].Trim(), Convert.ToDecimal(fileData[2].Trim()), Convert.ToBoolean(Convert.ToInt32(fileData[3].Trim())))
+        { }
 
         public  Product(string name, decimal price) : this(name, price, true)
         { }

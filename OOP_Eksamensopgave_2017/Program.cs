@@ -10,7 +10,7 @@ namespace OOP_Eksamensopgave_2017
     {
         static void Main()
         {
-
+            
         }
     }
 }

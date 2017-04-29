@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
-    class InsertCashTransaction : Transaction
+    public class InsertCashTransaction : Transaction
     {
         public InsertCashTransaction(User user, decimal amount) : base(user, amount)
         {

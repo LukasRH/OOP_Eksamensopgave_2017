@@ -5,14 +5,14 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
     class InsufficientCreditsException : Exception
     {
         public InsufficientCreditsException(string message, User user, Product product) : base(message)
         {
-            User = user;
-            Product = product;
+            this.User = user;
+            this.Product = product;
         }
 
         public User User;

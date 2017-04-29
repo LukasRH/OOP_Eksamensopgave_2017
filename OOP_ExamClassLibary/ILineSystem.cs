@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OOP_Eksamensopgave_2017
+namespace OOP_ExamClassLibary
 {
     interface ILineSystem
     {
@@ -18,7 +18,7 @@ namespace OOP_Eksamensopgave_2017
 
         IEnumerable<Transaction> GetTransactions(User user, int count);
 
-        User GetUsers(Func<User, bool> predicate);
+        IEnumerable<User> GetUsers(Func<User, bool> predicate);
 
         User GetUserByUsername(string username);
         event User.UserBalanceNotification UserBalanceWarning;
