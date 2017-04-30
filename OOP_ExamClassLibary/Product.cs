@@ -12,7 +12,7 @@ namespace OOP_ExamClassLibary
 
         private string _name;
 
-        public Product(string[] fileData) : this(fileData[1].Trim(), Convert.ToDecimal(fileData[2].Trim()), Convert.ToBoolean(Convert.ToInt32(fileData[3].Trim())))
+        public Product(string[] fileData) : this(fileData[1].Trim(), Convert.ToDecimal(fileData[2].Trim())/100, Convert.ToBoolean(Convert.ToInt32(fileData[3].Trim())))
         { }
 
         public  Product(string name, decimal price) : this(name, price, true)

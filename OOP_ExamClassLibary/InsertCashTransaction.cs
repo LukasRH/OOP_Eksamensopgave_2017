@@ -8,13 +8,14 @@ namespace OOP_ExamClassLibary
 {
     public class InsertCashTransaction : Transaction
     {
-        public InsertCashTransaction(User user, decimal amount) : base(user, amount)
+        public InsertCashTransaction(User user, decimal amount) : base("Deposit", user, amount)
         {
+            BalanceAfterTransaction = User.Balance + Amount;
         }
 
-        public override string ToString()
+        public override string DisplayTransaction()
         {
-            return $"Deposit {Id}: {User}, {Amount}, {Date}";
+            return $"{"Deposit",-10} {"Add funds to account",-40} {Amount,4}DDK {BalanceAfterTransaction,8}DDK   {Date:HH:mm:ss}";
         }
 
         public override int GetHashCode()

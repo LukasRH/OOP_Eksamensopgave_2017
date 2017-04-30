@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
@@ -12,7 +13,11 @@ namespace OOP_Exam_ConsoleUI
     {
         static void Main(string[] args)
         {
-            LineSystem LineSystem = new LineSystem();
+            ILineSystem lineSystem = new LineSystem();
+            ILineSystemUI ui = new LineSystemCLI("Console UI", lineSystem);
+            SystemController sc = new SystemController(ui, lineSystem);
+
+            ui.Start();
         }
     }
 }

@@ -8,21 +8,28 @@ namespace OOP_ExamClassLibary
 {
     public class BuyTransaction : Transaction
     {
-        public BuyTransaction(User user, Product product) : base(user, product.Price)
+        public BuyTransaction(User user, Product product) : base("Purchase", user, product.Price)
         {
             Product = product;
+            BalanceAfterTransaction = User.Balance - Amount;
+
         }
-        
+
         public Product Product { get;}
+        
+        public override int GetHashCode()
+        {
+            return $"Purchase{this.Id}".GetHashCode();
+        }
 
         public override string ToString()
         {
-            return $"Purchase {Id}: {User}, {Product.Name}, {Amount}, {Date}";
+            return base.ToString($"{Product.Id,3} {Product.Name}");
         }
 
-        public override int GetHashCode()
+        public override string DisplayTransaction()
         {
-            return $"BuyTransaction{this.Id}".GetHashCode();
+            return $"{"Purchase",-10} {Product.Name,-40} {Amount,4}DDK {BalanceAfterTransaction,8}DDK   {Date:HH:mm:ss}";
         }
 
         public override void Execute()

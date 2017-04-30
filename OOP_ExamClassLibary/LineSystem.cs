@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,6 +43,11 @@ namespace OOP_ExamClassLibary
                 transaction.Execute();
                 _transactions.Add(transaction);
                 LogTransaction(transaction, "Completed");
+                if (transaction.User.Balance <= 50)
+                {
+                    UserBalanceWarning?.Invoke(transaction.User, transaction.User.Balance);
+                }
+
                 return transaction;
             }
             catch (DeactivatedProductExcetion ex)
@@ -58,7 +64,12 @@ namespace OOP_ExamClassLibary
 
         public Product GetProductByID(int id)
         {
-            return _allProducts.Find(p => p.Id == id);
+            Product product = _allProducts.Find(p => p.Id == id);
+            if (product != null)
+            {
+                return product;
+            }
+            throw new ProductNotFoundException("Product was not found", id);
         }
 
         public IEnumerable<Transaction> GetTransactions(User user, int count)
@@ -68,16 +79,24 @@ namespace OOP_ExamClassLibary
 
         public IEnumerable<User> GetUsers(Func<User, bool> predicate)
         {
-
             return _users.Where(predicate);
         }
 
         public User GetUserByUsername(string username)
         {
-            return _users.Find(p => p.Username == username);
+            User user = _users.Find(p => p.Username == username);
+            if (user != null)
+            {
+                if (user.Balance < 50)
+                {
+                    UserBalanceWarning?.Invoke(user, user.Balance);
+                }
+                return user;
+            }
+            throw new UserNotFoundException("User was not found", username);
         }
 
-        public event User.UserBalanceNotification UserBalanceWarning;  // IKKE LAVET !!
+        public event UserBalanceNotification UserBalanceWarning;
 
         private void LoadProductsFromFile(ref List<Product> productsOut)
         {
@@ -87,6 +106,7 @@ namespace OOP_ExamClassLibary
                 productsOut.Add(new Product(product));
             }
         }
+
         private void LoadUsersFromFile(ref List<User> usersOut)
         {
             List<string[]> users = GetAllItemsFromFile("users.csv");
@@ -115,9 +135,9 @@ namespace OOP_ExamClassLibary
 
         private static void LogTransaction(Transaction transaction, string status)
         {
-            using (StreamWriter sWriter = File.AppendText("Transactions.log"))
+            using (StreamWriter sWriter = File.AppendText($"Transactions_{DateTime.Today:M-d-yy}.log"))
             {
-                sWriter.WriteLine(transaction.ToString());
+                sWriter.WriteLine($"{transaction.ToString()} : {status}");
             }
         }
     }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace OOP_ExamClassLibary
 {
+    public delegate void UserBalanceNotification(User user, decimal balance);
+
+
     public class User : IComparable<User>, IComparable
     {
         private static int _nextUserId = 1;
@@ -16,10 +19,14 @@ namespace OOP_ExamClassLibary
         private string _username;
         private string _email;
 
-        public User(string[] fileData) : this(fileData[1].Trim(), fileData[2].Trim(), fileData[3].Trim(), fileData[4].Trim())
+        public User(string[] fileData) : this(fileData[1].Trim(), fileData[2].Trim(), fileData[3].Trim(), fileData[4].Trim(), Convert.ToDecimal(fileData[5].Trim()))
         { }
 
-        public User(string firstname, string lastname, string username, string email)
+        public User(string firstname, string lastname, string username, string email) : this(firstname, lastname,
+            username, email, 0)
+        { }
+
+        public User(string firstname, string lastname, string username, string email, decimal balance)
         {
             this.Id = _nextUserId;
             _nextUserId++;
@@ -28,7 +35,7 @@ namespace OOP_ExamClassLibary
             this.Lastname = lastname;
             this.Username = username;
             this.Email = email;
-            this.Balance = 0;
+            this.Balance = balance;
         }
 
         public int Id { get; }
@@ -69,8 +76,6 @@ namespace OOP_ExamClassLibary
 
         public decimal Balance { get; set; }
 
-        public delegate void UserBalanceNotification(User userm, decimal balance);
-
         private static bool _validateEmail(string email)
         {
             if (!email.Contains("@") || email.Count(c => c == '@') > 1) return false;
@@ -90,7 +95,7 @@ namespace OOP_ExamClassLibary
 
         public override string ToString()
         {
-            return $"{Firstname} {Lastname}, {Email}";
+            return $"{$"{Firstname} {Lastname}",20} {Username,15} {$"({Email})",25}";
         }
 
         public override bool Equals(object obj)

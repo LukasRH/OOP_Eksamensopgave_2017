@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OOP_ExamClassLibary
 {
-    interface ILineSystem
+    public interface ILineSystem
     {
         IEnumerable<Product> ActiveProducts { get; }
 
@@ -21,6 +21,6 @@ namespace OOP_ExamClassLibary
         IEnumerable<User> GetUsers(Func<User, bool> predicate);
 
         User GetUserByUsername(string username);
-        event User.UserBalanceNotification UserBalanceWarning;
+        event UserBalanceNotification UserBalanceWarning;
     }
 }
