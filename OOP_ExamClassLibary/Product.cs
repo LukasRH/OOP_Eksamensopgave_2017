@@ -12,6 +12,7 @@ namespace OOP_ExamClassLibary
 
         private string _name;
 
+        //Constructor for user file data, must be in the form id,name,price,on credit?
         public Product(string[] fileData) : this(fileData[1].Trim(), Convert.ToDecimal(fileData[2].Trim())/100, Convert.ToBoolean(Convert.ToInt32(fileData[3].Trim())))
         { }
 
@@ -52,7 +53,7 @@ namespace OOP_ExamClassLibary
 
         public override string ToString()
         {
-            return $"{Id}, {Name}, {Price}";
+            return $"ǀ{Id,-3} ǀ {Name,-35} ǀ {Price,5} DDKǀ";
         }
 
         public override bool Equals(object obj)

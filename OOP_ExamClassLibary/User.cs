@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace OOP_ExamClassLibary
 {
+    //Delegate for the balance warning event.
     public delegate void UserBalanceNotification(User user, decimal balance);
-
 
     public class User : IComparable<User>, IComparable
     {
@@ -19,6 +19,7 @@ namespace OOP_ExamClassLibary
         private string _username;
         private string _email;
 
+        //Constructor for user file data, must be in the form id,firstname,lastname,email,balance
         public User(string[] fileData) : this(fileData[1].Trim(), fileData[2].Trim(), fileData[3].Trim(), fileData[4].Trim(), Convert.ToDecimal(fileData[5].Trim()))
         { }
 
@@ -40,29 +41,41 @@ namespace OOP_ExamClassLibary
 
         public int Id { get; }
 
+        //Validate that firstname only contain legal characters, before it gets set
         public string Firstname
         {
             get => _firstname;
-            set => _firstname = value ?? throw new ArgumentNullException(nameof(User.Firstname));
+            set
+            {
+                if (string.IsNullOrEmpty(value) || !value.All(c => char.IsLetter(c) || c == '-')) throw new ArgumentException("Invalid characters in name");
+                _firstname = value;
+            }
         }
 
+        //Validate tha last name only contain legal characters, before it gets set
         public string Lastname
         {
             get => _lastname;
-            set => _lastname = value ?? throw new ArgumentNullException(nameof(User.Lastname));
+            set
+            {
+                if (string.IsNullOrEmpty(value) || !value.All(c => char.IsLetter(c) || c == ' ')) throw new ArgumentException("Invalid characters in name");
+                _lastname = value;
+            }
         }
 
+        //Check that the username dont contain any ilegal characters, before it gets set
         public string Username
         {
             get => _username;
             set
             {
-                if (value.Any(char.IsUpper) || value.Any(c => !char.IsLetterOrDigit(c) && c != '_')) throw new ArgumentException($"Username contains one or more ilegal characters");
+                if (string.IsNullOrEmpty(value) || value.Any(char.IsUpper) || value.Any(c => !char.IsLetterOrDigit(c) && c != '_')) throw new ArgumentException($"Username contains one or more ilegal characters");
                 _username = value;
             } 
             
         }
 
+        //check if its a valid email before it gets set
         public string Email
         {
             get => _email;
@@ -76,20 +89,27 @@ namespace OOP_ExamClassLibary
 
         public decimal Balance { get; set; }
 
+        //Check is a given string is a valid email
         private static bool _validateEmail(string email)
         {
+            //Stop if the sting does not contain a @ or more then one @.
+            //then split the sting up in loacl and domain to check seperate.
             if (!email.Contains("@") || email.Count(c => c == '@') > 1) return false;
             var address = email.Split('@');
             var local = address[0];
             var domain = address[1];
 
-            if (!local.Any(c => char.IsLetterOrDigit(c) || c == '.' || c == '_' || c == '-')) return false;
+            //Check if the local part meet the requiremets, else stop here
+            if (local == string.Empty || !local.All(c => char.IsLetterOrDigit(c) || c == '.' || c == '_' || c == '-')) return false;
 
+            //Check if doman contain at least one . else stop here
             if (!domain.Contains(".")) return false;
-
-            if (domain.StartsWith("-") || domain.StartsWith(".") || domain.EndsWith(".") || domain.EndsWith("-") ||
-                !domain.Any(c => char.IsLetterOrDigit(c) || c == '.' || c == '-')) return false;
-
+            
+            //check that the domain meets the requirements, else stop here
+            if (string.IsNullOrEmpty(domain) || domain.StartsWith("-") || domain.StartsWith(".") || domain.EndsWith(".") || domain.EndsWith("-") ||
+                !domain.All(c => char.IsLetterOrDigit(c) || c == '.' || c == '-')) return false;
+            
+            //and if we made it all the way here, we have a valid email.
             return true;
         }
 
@@ -100,16 +120,15 @@ namespace OOP_ExamClassLibary
 
         public override bool Equals(object obj)
         {
+            //Try to convert the obj to User
             var newObj = obj as User;
 
+            //If not a user, return false. else check if its the same user.
             if (newObj != null)
             {
                 return this.GetHashCode() == newObj.GetHashCode();
             }
-            else
-            {
-                return base.Equals(obj);
-            }
+                return false;
         }
 
         public override int GetHashCode()

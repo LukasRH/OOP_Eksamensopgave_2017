@@ -100,10 +100,12 @@ namespace OOP_Exam_ConsoleUI
         private void DrawCLI()
         {
             Console.Clear();
+            Console.WriteLine("┌────┬─────────────────────────────────────┬──────────┐");
             foreach (var product in _lineSystem.ActiveProducts)
             {
                 Console.WriteLine(product);
             }
+            Console.WriteLine("└────┴─────────────────────────────────────┴──────────┘");
             Console.WriteLine();
             Console.WriteLine(_cliInfoMessage + _userBalanceWarning);
             Console.Write("Quickbuy: ");

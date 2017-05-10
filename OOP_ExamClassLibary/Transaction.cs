@@ -18,9 +18,11 @@ namespace OOP_ExamClassLibary
             this.Amount = amount;
             this.Date = DateTime.Now;
 
+            //Create unique using the current time and transaction number.
             this.Id = Convert.ToInt32($"{Date:HHmmss}{_nextTransationId++}");
         }
 
+        //Snapshot of the users balance after transaction
         protected decimal BalanceAfterTransaction;
 
         public int Id { get; }

@@ -56,6 +56,7 @@ namespace OOP_ExamClassLibary
             this._ui.CommandEntered += Ui_CommandEntered;
         }
 
+        //Check if the entered command is a admin command or usercommand
         private void Ui_CommandEntered(object sender, string command)
         {
             if (command.StartsWith(":"))
@@ -64,6 +65,7 @@ namespace OOP_ExamClassLibary
                 ParseCommand(command);
         }
 
+        //Execute user commands, using the amount of arguments to decide what command to run
         private void ParseCommand(string command)
         {
             var commandArguments = command.Split(' ');
@@ -97,6 +99,7 @@ namespace OOP_ExamClassLibary
             }
         }
 
+        //Execute the admincommands, again using the number of arguments given.
         private void PraseAdminCommand(string command)
         {
             var commandArgumets = command.Split(' ').ToList();
